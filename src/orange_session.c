@@ -158,10 +158,11 @@ int orange_session_grant(struct orange_session *self, const char *scope, const c
     char *new_scope, *new_obj, *new_func, *new_id, *new_perms;
     int id_len;
 
-    if (!object || !function)
+    if (!object || !function) {
         return -EINVAL;
+    }
 
-	pthread_mutex_lock(&self->lock); 
+    pthread_mutex_lock(&self->lock); 
 
     acl_scope = avl_find_element(&self->acl_scopes, scope, acl_scope, avl);
 
@@ -170,9 +171,9 @@ int orange_session_grant(struct orange_session *self, const char *scope, const c
                              &new_scope, strlen(scope) + 1);
 		
         if (!acl_scope){ 
-			pthread_mutex_unlock(&self->lock); 
-            return -1;
-		}
+		pthread_mutex_unlock(&self->lock); 
+            	return -1;
+	}
 
         acl_scope->avl.key = strcpy(new_scope, scope);
         avl_init(&acl_scope->acls, avl_strcmp, true, NULL);
